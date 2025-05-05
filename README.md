@@ -1,14 +1,28 @@
 # 2cent-tts
 
-This experiment aims to develop an open-weight, cost-effective speech model using just a few hundred hours of synthetic training data. After training, the model is converted to be compatible with [piper](https://github.com/rhasspy/piper.git) for inference purposes.
+This experiment aims to develop an open-weight, cost-effective speech model using just a few hundred hours of synthetic training data. After training, the model is converted to [gguf](https://github.com/ggml-org/llama.cpp) for inference purposes.
 
 Currently, the system only supports US English, though support for additional languages is planned for future releases.
 
-## Model Files
+## Testing
 
-| Filename                | Description          | Size |
-| ----------------------- | -------------------- | ---- |
-| `2cent-tts-v0.1.0.onnx` | FP32 precision model | 63MB |
+```
+# Build a Docker image named '2cent' from the current directory
+docker build -t 2cent .
+
+# Run the Docker container, mapping port 8080 on the host to port 80 in the container
+docker run -p 8080:80 2cent
+
+# Send a text-to-speech request to the API and play the audio response
+# - Makes a POST request to the speech endpoint
+# - Specifies tts-1 model with text input
+# - Requests PCM audio format
+# - Pipes the output to ffplay for immediate playback
+curl http://localhost:8080/v1/audio/speech -H "Content-Type: application/json" -d '{"model":"tts-1","input":"Hello, this is a test of text to speech.","response_format":"pcm"}' --output - | ffplay -f s16le -ar 24000 -ac 1 -
+
+# Or Saves the result as "output.wav" in the current directory
+curl http://localhost:8080/v1/audio/speech -H "Content-Type: application/json" -d '{"model":"tts-1","input":"Hello, this is a test of text to speech.","response_format":"pcm"}' --output - | ffmpeg -f s16le -ar 24000 -ac 1 -i - output.wav
+```
 
 ## License
 
