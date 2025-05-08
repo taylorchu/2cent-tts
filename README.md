@@ -4,6 +4,18 @@ This experiment aims to develop an open-weight, cost-effective speech model usin
 
 Currently, the system only supports US English, though support for additional languages is planned for future releases.
 
+## Samples
+
+| Index | Sample Path        |
+| ----- | ------------------ |
+| 0     | ![](samples/0.mp4) |
+| 1     | ![](samples/1.mp4) |
+| 2     | ![](samples/2.mp4) |
+| 3     | ![](samples/3.mp4) |
+| 4     | ![](samples/4.mp4) |
+| 5     | ![](samples/5.mp4) |
+| 6     | ![](samples/6.mp4) |
+
 ## Testing
 
 ```
