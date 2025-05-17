@@ -6,15 +6,19 @@ Currently, the system only supports US English, though support for additional la
 
 ## Samples
 
-| Index | Sample Path                                                                         |
-| ----- | ----------------------------------------------------------------------------------- |
-| 0     | [](https://github.com/user-attachments/assets/aac168bd-214d-4e78-a7f0-24679ab5e084) |
-| 1     | [](https://github.com/user-attachments/assets/c758c0aa-8df5-4827-a72a-d58780031dd2) |
-| 2     | [](https://github.com/user-attachments/assets/c0ef39d5-bbdc-47c1-86db-0fac096841b3) |
-| 3     | [](https://github.com/user-attachments/assets/de9bd205-1981-452f-8110-52b11d2b04ce) |
-| 4     | [](https://github.com/user-attachments/assets/790c3622-8af5-4e7a-b581-53e050062b7e) |
-| 5     | [](https://github.com/user-attachments/assets/b54a7445-08ed-4532-8517-21fb7b02c27b) |
-| 6     | [](https://github.com/user-attachments/assets/1ffbd093-37df-4406-ba4c-1e53146b639d) |
+https://github.com/user-attachments/assets/aac168bd-214d-4e78-a7f0-24679ab5e084
+
+https://github.com/user-attachments/assets/c758c0aa-8df5-4827-a72a-d58780031dd2
+
+https://github.com/user-attachments/assets/c0ef39d5-bbdc-47c1-86db-0fac096841b3
+
+https://github.com/user-attachments/assets/de9bd205-1981-452f-8110-52b11d2b04ce
+
+https://github.com/user-attachments/assets/790c3622-8af5-4e7a-b581-53e050062b7e
+
+https://github.com/user-attachments/assets/b54a7445-08ed-4532-8517-21fb7b02c27b
+
+https://github.com/user-attachments/assets/1ffbd093-37df-4406-ba4c-1e53146b639d
 
 ## Testing
 
