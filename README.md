@@ -28,6 +28,30 @@ curl http://localhost:8080/v1/audio/speech -H "Content-Type: application/json" -
 curl http://localhost:8080/v1/audio/speech -H "Content-Type: application/json" -d '{"model":"tts-1","input":"Hello, this is a test of text to speech.","response_format":"pcm"}' --output - | ffmpeg -f s16le -ar 24000 -ac 1 -i - output.wav
 ```
 
+## Technical Implementation Details
+
+> [!NOTE]
+> We're currently focusing our support on the provided inference code, which represents our recommended implementation.
+> While we aren't offering alternative methods at this time, you're welcome to create your own implementation using the Technical Implementation Details as a guide.
+
+### Tokenization Strategy
+
+The system employs SentencePiece tokenizers for processing both audio and International Phonetic Alphabet (IPA) representations. Our vocabulary consists of 4,096 SNAC audio tokens combined with additional IPA tokens, creating a comprehensive vocabulary of 6,000 tokens. SentencePiece was specifically selected to avoid the inconsistent preprocessing implementations often encountered with BPE or BBPE in llama.cpp deployments. Audio tokens follow a standardized notation format of `<audio_X>`, where X represents the token identifier (e.g., `<audio_1024>`).
+
+### Phonetic Representation
+
+The IPA representations are derived directly from espeak-ng, ensuring consistent phonetic transcription across languages. When encountering pauses in speech (such as those indicated by commas in text), we use the "." character as a delimiter to separate multiple phonetic segments. This approach provides a clean separation between distinct phonetic units while preserving the natural rhythm of speech.
+Generation Pipeline
+The tokenized input is processed by llama.cpp with a structured prefix format of `<ipa_X><ipa_X>...<s>`, where each IPA token is properly tagged and sequenced. This formatted input prompts the model to generate a corresponding sequence of audio tokens in the form `<audio_1><audio_2>...</s>`. This standardized input-output pattern enables consistent audio synthesis across various inputs.
+
+### Hierarchical Token Structure
+
+The generated audio tokens are converted to sequential token IDs (1, 2, 3, etc.) organized in a depth-first hierarchical structure. For example, in a sequence `[1,2,3,4,5,6,7]`, token 1 represents the coarsest level of audio representation, while tokens 2 and 5 function as leaf nodes of token 1. Similarly, tokens 3 and 4 are leaf nodes of token 2, while tokens 6 and 7 are leaf nodes of token 5. This hierarchical approach enables multi-resolution audio modeling.
+
+### Audio Synthesis
+
+The final stage involves converting these hierarchically structured audio tokens, which contain three levels of granularity, through the SNAC decoder to produce the actual audio waveform. This multi-level approach allows for precise control over the acoustic properties of the synthesized speech, resulting in more natural-sounding output.
+
 ## License
 
 This project is licensed under the Apache 2.0 License - see the [LICENSE](LICENSE) file for details.
