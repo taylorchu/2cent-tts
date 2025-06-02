@@ -41,8 +41,15 @@ The system employs SentencePiece tokenizers for processing both audio and Intern
 ### Phonetic Representation
 
 The IPA representations are derived directly from espeak-ng, ensuring consistent phonetic transcription across languages. When encountering pauses in speech (such as those indicated by commas in text), we use the "." character as a delimiter to separate multiple phonetic segments. This approach provides a clean separation between distinct phonetic units while preserving the natural rhythm of speech.
-Generation Pipeline
-The tokenized input is processed by llama.cpp with a structured prefix format of `<ipa_X><ipa_X>...<s>`, where each IPA token is properly tagged and sequenced. This formatted input prompts the model to generate a corresponding sequence of audio tokens in the form `<audio_1><audio_2>...</s>`. This standardized input-output pattern enables consistent audio synthesis across various inputs.
+
+### Generation Pipeline
+
+The tokenized input is processed with different structured prefix formats depending on the model version:
+
+v0.1.0 and v0.2.0: `<ipa_X><ipa_X>...<s>` format, where each IPA token is properly tagged and sequenced
+v0.3.0: `<s><audio><audio_X><audio_X>...<text><ipa_X><ipa_X>...<generate>` format, which includes 24 audio tokens randomly sampled from the coarsest level of audio representation, followed by the IPA sequence
+
+This formatted input prompts the model to generate a corresponding sequence of audio tokens in the form `<audio_X><audio_X>...</s>`. The inclusion of audio tokens in v0.3.0 provides additional context for audio synthesis, while the standardized input-output pattern enables consistent audio generation across various inputs and model versions.
 
 ### Hierarchical Token Structure
 
