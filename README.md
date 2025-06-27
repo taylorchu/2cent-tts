@@ -6,6 +6,8 @@ Currently, the system only supports US English, though support for additional la
 
 ## Samples
 
+https://github.com/user-attachments/assets/1272c11e-8026-47b2-aa3a-a8bb7de0b0d0
+
 https://github.com/user-attachments/assets/d6733aa2-de66-4d45-885f-3bcfe3c2fc90
 
 ## Testing
@@ -22,10 +24,10 @@ docker run -p 8080:80 2cent
 # - Specifies tts-1 model with text input
 # - Requests PCM audio format
 # - Pipes the output to ffplay for immediate playback
-curl http://localhost:8080/v1/audio/speech -H "Content-Type: application/json" -d '{"model":"tts-1","input":"Hello, this is a test of text to speech.","response_format":"pcm"}' --output - | ffplay -f s16le -ar 24000 -ac 1 -
+curl http://localhost:8080/v1/audio/speech -H "Content-Type: application/json" -d '{"model":"tts-1","input":"Hello, this is a test of text to speech.","voice":"<speaker_79><speaker_102><speaker_160><speaker_188><speaker_168><speaker_52>","response_format":"pcm"}' --output - | ffplay -f s16le -ar 24000 -ac 1 -
 
 # Or Saves the result as "output.wav" in the current directory
-curl http://localhost:8080/v1/audio/speech -H "Content-Type: application/json" -d '{"model":"tts-1","input":"Hello, this is a test of text to speech.","response_format":"pcm"}' --output - | ffmpeg -f s16le -ar 24000 -ac 1 -i - output.wav
+curl http://localhost:8080/v1/audio/speech -H "Content-Type: application/json" -d '{"model":"tts-1","input":"Hello, this is a test of text to speech.","voice":"<speaker_79><speaker_102><speaker_160><speaker_188><speaker_168><speaker_52>","response_format":"pcm"}' --output - | ffmpeg -f s16le -ar 24000 -ac 1 -i - output.wav
 ```
 
 ## Technical Implementation Details
