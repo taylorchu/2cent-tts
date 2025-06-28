@@ -6,6 +6,8 @@ Currently, the system only supports US English, though support for additional la
 
 ## Samples
 
+https://github.com/user-attachments/assets/1272c11e-8026-47b2-aa3a-a8bb7de0b0d0
+
 https://github.com/user-attachments/assets/d6733aa2-de66-4d45-885f-3bcfe3c2fc90
 
 ## Testing
@@ -22,10 +24,10 @@ docker run -p 8080:80 2cent
 # - Specifies tts-1 model with text input
 # - Requests PCM audio format
 # - Pipes the output to ffplay for immediate playback
-curl http://localhost:8080/v1/audio/speech -H "Content-Type: application/json" -d '{"model":"tts-1","input":"Hello, this is a test of text to speech.","response_format":"pcm"}' --output - | ffplay -f s16le -ar 24000 -ac 1 -
+curl http://localhost:8080/v1/audio/speech -H "Content-Type: application/json" -d '{"model":"tts-1","input":"Hello, this is a test of text to speech.","voice":"<speaker_79><speaker_102><speaker_160><speaker_188><speaker_168><speaker_52>","response_format":"pcm"}' --output - | ffplay -f s16le -ar 24000 -ac 1 -
 
 # Or Saves the result as "output.wav" in the current directory
-curl http://localhost:8080/v1/audio/speech -H "Content-Type: application/json" -d '{"model":"tts-1","input":"Hello, this is a test of text to speech.","response_format":"pcm"}' --output - | ffmpeg -f s16le -ar 24000 -ac 1 -i - output.wav
+curl http://localhost:8080/v1/audio/speech -H "Content-Type: application/json" -d '{"model":"tts-1","input":"Hello, this is a test of text to speech.","voice":"<speaker_79><speaker_102><speaker_160><speaker_188><speaker_168><speaker_52>","response_format":"pcm"}' --output - | ffmpeg -f s16le -ar 24000 -ac 1 -i - output.wav
 ```
 
 ## Technical Implementation Details
@@ -41,8 +43,16 @@ The system employs SentencePiece tokenizers for processing both audio and Intern
 ### Phonetic Representation
 
 The IPA representations are derived directly from espeak-ng, ensuring consistent phonetic transcription across languages. When encountering pauses in speech (such as those indicated by commas in text), we use the "." character as a delimiter to separate multiple phonetic segments. This approach provides a clean separation between distinct phonetic units while preserving the natural rhythm of speech.
-Generation Pipeline
-The tokenized input is processed by llama.cpp with a structured prefix format of `<ipa_X><ipa_X>...<s>`, where each IPA token is properly tagged and sequenced. This formatted input prompts the model to generate a corresponding sequence of audio tokens in the form `<audio_1><audio_2>...</s>`. This standardized input-output pattern enables consistent audio synthesis across various inputs.
+
+### Generation Pipeline
+
+The tokenized input is processed with different structured prefix formats depending on the model version:
+
+v0.1.0 and v0.2.0: `<ipa_X><ipa_X>...<s>` format, where each IPA token is properly tagged and sequenced
+
+v0.3.0: `<s><speaker><speaker_X><speaker_X>...<text><ipa_X><ipa_X>...<generate>` format, which includes speaker tokens, followed by the IPA sequence
+
+This formatted input prompts the model to generate a corresponding sequence of audio tokens in the form `<audio_X><audio_X>...</s>`. The inclusion of speaker tokens in v0.3.0 provides additional context for audio synthesis, while the standardized input-output pattern enables consistent audio generation across various inputs and model versions.
 
 ### Hierarchical Token Structure
 
