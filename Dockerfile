@@ -1,7 +1,7 @@
 FROM alpine AS onnxruntime
 
-ADD https://github.com/microsoft/onnxruntime/releases/download/v1.21.0/onnxruntime-linux-x64-1.21.0.tgz /
-RUN tar -xvf /onnxruntime-linux-x64-1.21.0.tgz
+ADD https://github.com/microsoft/onnxruntime/releases/download/v1.22.0/onnxruntime-linux-x64-1.22.0.tgz /
+RUN tar -xvf /onnxruntime-linux-x64-1.22.0.tgz
 
 FROM ghcr.io/ggml-org/llama.cpp:server-b5318
 
@@ -11,7 +11,7 @@ RUN \
   espeak-ng \
   && rm -rf /var/lib/apt/lists/*
 
-COPY --from=onnxruntime /onnxruntime-linux-x64-1.21.0/lib/libonnxruntime.so libonnxruntime.so
+COPY --from=onnxruntime /onnxruntime-linux-x64-1.22.0/lib/libonnxruntime.so libonnxruntime.so
 ENV ONNX_PATH=/app/libonnxruntime.so
 
 ADD https://huggingface.co/onnx-community/snac_24khz-ONNX/resolve/main/onnx/decoder_model.onnx snac.onnx
@@ -22,5 +22,6 @@ ADD https://github.com/taylorchu/2cent-tts/releases/download/v0.3.0/tts-http-ser
 RUN chmod +x tts-http-server
 
 ENV PATH="$PATH:/app"
+ENV LLAMA_SERVER_ARGS="--samplers temp"
 
 ENTRYPOINT ["tts-http-server"]

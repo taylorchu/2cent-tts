@@ -26,8 +26,11 @@ docker run -p 8080:80 2cent
 # - Pipes the output to ffplay for immediate playback
 curl http://localhost:8080/v1/audio/speech -H "Content-Type: application/json" -d '{"model":"tts-1","input":"Hello, this is a test of text to speech.","voice":"<speaker_79><speaker_102><speaker_160><speaker_188><speaker_168><speaker_52>","response_format":"pcm"}' --output - | ffplay -f s16le -ar 24000 -ac 1 -
 
+Or WAV audio format
+curl http://localhost:8080/v1/audio/speech -H "Content-Type: application/json" -d '{"model":"tts-1","input":"Hello, this is a test of text to speech.","voice":"<speaker_79><speaker_102><speaker_160><speaker_188><speaker_168><speaker_52>","response_format":"wav"}' --output - | ffplay -
+
 # Or Saves the result as "output.wav" in the current directory
-curl http://localhost:8080/v1/audio/speech -H "Content-Type: application/json" -d '{"model":"tts-1","input":"Hello, this is a test of text to speech.","voice":"<speaker_79><speaker_102><speaker_160><speaker_188><speaker_168><speaker_52>","response_format":"pcm"}' --output - | ffmpeg -f s16le -ar 24000 -ac 1 -i - output.wav
+curl http://localhost:8080/v1/audio/speech -H "Content-Type: application/json" -d '{"model":"tts-1","input":"Hello, this is a test of text to speech.","voice":"<speaker_79><speaker_102><speaker_160><speaker_188><speaker_168><speaker_52>","response_format":"wav"}' --output output.wav
 ```
 
 ## Technical Implementation Details
