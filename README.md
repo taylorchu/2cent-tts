@@ -1,6 +1,6 @@
 # 2cent-tts
 
-This experiment aims to develop an open-weight, cost-effective speech model using just a few hundred hours of synthetic training data. After training, the model is converted to [gguf](https://github.com/ggml-org/llama.cpp) for inference purposes.
+This experiment aims to develop an open-weight, cost-effective speech model using ~10k hours of synthetic training data. After training, the model is converted to [gguf](https://github.com/ggml-org/llama.cpp) for inference purposes.
 
 Currently, the system only supports US English, though support for additional languages is planned for future releases.
 
@@ -24,13 +24,13 @@ docker run -p 8080:80 2cent
 # - Specifies tts-1 model with text input
 # - Requests PCM audio format
 # - Pipes the output to ffplay for immediate playback
-curl http://localhost:8080/v1/audio/speech -H "Content-Type: application/json" -d '{"model":"tts-1","input":"Hello, this is a test of text to speech.","voice":"<speaker_79><speaker_102><speaker_160><speaker_188><speaker_168><speaker_52>","response_format":"pcm"}' --output - | ffplay -f s16le -ar 24000 -ac 1 -
+curl http://localhost:8080/v1/audio/speech -H "Content-Type: application/json" -d '{"model":"tts-1","input":"Hello, this is a test of text to speech.","voice":"<speaker><speaker_81><speaker_150><speaker_115><speaker_227><speaker_50><speaker_17><emotion><emotion_179><emotion_226><emotion_183><emotion_105><emotion_150><emotion_201>","response_format":"pcm"}' --output - | ffplay -f s16le -ar 24000 -ac 1 -
 
 Or WAV audio format
-curl http://localhost:8080/v1/audio/speech -H "Content-Type: application/json" -d '{"model":"tts-1","input":"Hello, this is a test of text to speech.","voice":"<speaker_79><speaker_102><speaker_160><speaker_188><speaker_168><speaker_52>","response_format":"wav"}' --output - | ffplay -
+curl http://localhost:8080/v1/audio/speech -H "Content-Type: application/json" -d '{"model":"tts-1","input":"Hello, this is a test of text to speech.","voice":"<speaker><speaker_81><speaker_150><speaker_115><speaker_227><speaker_50><speaker_17><emotion><emotion_179><emotion_226><emotion_183><emotion_105><emotion_150><emotion_201>","response_format":"wav"}' --output - | ffplay -
 
 # Or Saves the result as "output.wav" in the current directory
-curl http://localhost:8080/v1/audio/speech -H "Content-Type: application/json" -d '{"model":"tts-1","input":"Hello, this is a test of text to speech.","voice":"<speaker_79><speaker_102><speaker_160><speaker_188><speaker_168><speaker_52>","response_format":"wav"}' --output output.wav
+curl http://localhost:8080/v1/audio/speech -H "Content-Type: application/json" -d '{"model":"tts-1","input":"Hello, this is a test of text to speech.","voice":"<speaker><speaker_81><speaker_150><speaker_115><speaker_227><speaker_50><speaker_17><emotion><emotion_179><emotion_226><emotion_183><emotion_105><emotion_150><emotion_201>","response_format":"wav"}' --output output.wav
 ```
 
 ## Technical Implementation Details
@@ -56,6 +56,8 @@ v0.1.0 and v0.2.0: `<ipa_X><ipa_X>...<s>` format, where each IPA token is proper
 v0.3.0: `<s><speaker><speaker_X><speaker_X>...<text><ipa_X><ipa_X>...<generate>` format, which includes speaker tokens, followed by the IPA sequence
 
 This formatted input prompts the model to generate a corresponding sequence of audio tokens in the form `<audio_X><audio_X>...</s>`. The inclusion of speaker tokens in v0.3.0 provides additional context for audio synthesis, while the standardized input-output pattern enables consistent audio generation across various inputs and model versions.
+
+v0.4.0: `<s><speaker><speaker_X><speaker_X>...<emotion><emotion_X><emotion_X>...<text><ipa_X><ipa_X>...<generate>` format, which includes emotion tokens on top of the previous version.
 
 ### Hierarchical Token Structure
 
