@@ -3,7 +3,7 @@ FROM alpine AS onnxruntime
 ADD https://github.com/microsoft/onnxruntime/releases/download/v1.22.0/onnxruntime-linux-x64-1.22.0.tgz /
 RUN tar -xvf /onnxruntime-linux-x64-1.22.0.tgz
 
-FROM ghcr.io/ggml-org/llama.cpp:server-b6178
+FROM ghcr.io/ggml-org/llama.cpp:server-b6341
 
 RUN \
   apt-get update \

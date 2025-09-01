@@ -41,7 +41,7 @@ curl http://localhost:8080/v1/audio/speech -H "Content-Type: application/json" -
 
 ### Tokenization Strategy
 
-The system employs SentencePiece tokenizers for processing both audio and International Phonetic Alphabet (IPA) representations. Our vocabulary consists of 4,096 SNAC audio tokens combined with additional IPA tokens, creating a comprehensive vocabulary of 6,000 tokens. SentencePiece was specifically selected to avoid the inconsistent preprocessing implementations often encountered with BPE or BBPE in llama.cpp deployments. Audio tokens follow a standardized notation format of `<audio_X>`, where X represents the token identifier (e.g., `<audio_1024>`).
+The system employs huggingface tokenizers for processing both audio and International Phonetic Alphabet (IPA) representations. Our vocabulary consists of SNAC audio tokens combined with additional IPA tokens. Audio tokens follow a standardized notation format of `<audio_X>`, where X represents the token identifier (e.g., `<audio_1024>`).
 
 ### Phonetic Representation
 
