@@ -4,6 +4,14 @@ This experiment aims to develop an open-weight, cost-effective speech model usin
 
 Currently, the system only supports US English, though support for additional languages is planned for future releases.
 
+## Features
+
+- Small model (under 100M parameters)
+- Thousands of voices available
+- Emotion support
+- Multi-turn dialogue in single inference
+- High-quality 24kHz audio output
+
 ## Samples
 
 https://github.com/user-attachments/assets/1272c11e-8026-47b2-aa3a-a8bb7de0b0d0
