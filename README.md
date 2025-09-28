@@ -1,8 +1,17 @@
 # 2cent-tts
 
-This experiment aims to develop an open-weight, cost-effective speech model using just a few hundred hours of synthetic training data. After training, the model is converted to [gguf](https://github.com/ggml-org/llama.cpp) for inference purposes.
+This experiment aims to develop an open-weight, cost-effective speech model using ~10k hours of synthetic training data. After training, the model is converted to [gguf](https://github.com/ggml-org/llama.cpp) for inference purposes.
 
 Currently, the system only supports US English, though support for additional languages is planned for future releases.
+
+## Features
+
+- Small model (under 100M parameters)
+- Thousands of voices available
+- Voice cloning
+- Emotion support
+- Multi-turn dialogue in single inference
+- High-quality 24kHz audio output
 
 ## Samples
 
@@ -24,13 +33,13 @@ docker run -p 8080:80 2cent
 # - Specifies tts-1 model with text input
 # - Requests PCM audio format
 # - Pipes the output to ffplay for immediate playback
-curl http://localhost:8080/v1/audio/speech -H "Content-Type: application/json" -d '{"model":"tts-1","input":"Hello, this is a test of text to speech.","voice":"<speaker_79><speaker_102><speaker_160><speaker_188><speaker_168><speaker_52>","response_format":"pcm"}' --output - | ffplay -f s16le -ar 24000 -ac 1 -
+curl http://localhost:8080/v1/audio/speech -H "Content-Type: application/json" -d '{"model":"tts-1","input":"Hello, this is a test of text to speech.","voice":"<speaker><speaker_189><speaker_24><speaker_70><speaker_193><speaker_181><speaker_232><emotion><emotion_319><emotion_141><emotion_99><emotion_188><emotion_492><emotion_258>","response_format":"pcm"}' --output - | ffplay -f s16le -ar 24000 -ac 1 -
 
 Or WAV audio format
-curl http://localhost:8080/v1/audio/speech -H "Content-Type: application/json" -d '{"model":"tts-1","input":"Hello, this is a test of text to speech.","voice":"<speaker_79><speaker_102><speaker_160><speaker_188><speaker_168><speaker_52>","response_format":"wav"}' --output - | ffplay -
+curl http://localhost:8080/v1/audio/speech -H "Content-Type: application/json" -d '{"model":"tts-1","input":"Hello, this is a test of text to speech.","voice":"<speaker><speaker_189><speaker_24><speaker_70><speaker_193><speaker_181><speaker_232><emotion><emotion_319><emotion_141><emotion_99><emotion_188><emotion_492><emotion_258>","response_format":"wav"}' --output - | ffplay -
 
 # Or Saves the result as "output.wav" in the current directory
-curl http://localhost:8080/v1/audio/speech -H "Content-Type: application/json" -d '{"model":"tts-1","input":"Hello, this is a test of text to speech.","voice":"<speaker_79><speaker_102><speaker_160><speaker_188><speaker_168><speaker_52>","response_format":"wav"}' --output output.wav
+curl http://localhost:8080/v1/audio/speech -H "Content-Type: application/json" -d '{"model":"tts-1","input":"Hello, this is a test of text to speech.","voice":"<speaker><speaker_189><speaker_24><speaker_70><speaker_193><speaker_181><speaker_232><emotion><emotion_319><emotion_141><emotion_99><emotion_188><emotion_492><emotion_258>","response_format":"wav"}' --output output.wav
 ```
 
 ## Technical Implementation Details
@@ -41,7 +50,7 @@ curl http://localhost:8080/v1/audio/speech -H "Content-Type: application/json" -
 
 ### Tokenization Strategy
 
-The system employs SentencePiece tokenizers for processing both audio and International Phonetic Alphabet (IPA) representations. Our vocabulary consists of 4,096 SNAC audio tokens combined with additional IPA tokens, creating a comprehensive vocabulary of 6,000 tokens. SentencePiece was specifically selected to avoid the inconsistent preprocessing implementations often encountered with BPE or BBPE in llama.cpp deployments. Audio tokens follow a standardized notation format of `<audio_X>`, where X represents the token identifier (e.g., `<audio_1024>`).
+The system employs huggingface tokenizers for processing both audio and International Phonetic Alphabet (IPA) representations. Our vocabulary consists of SNAC audio tokens combined with additional IPA tokens. Audio tokens follow a standardized notation format of `<audio_X>`, where X represents the token identifier (e.g., `<audio_1024>`).
 
 ### Phonetic Representation
 
@@ -56,6 +65,8 @@ v0.1.0 and v0.2.0: `<ipa_X><ipa_X>...<s>` format, where each IPA token is proper
 v0.3.0: `<s><speaker><speaker_X><speaker_X>...<text><ipa_X><ipa_X>...<generate>` format, which includes speaker tokens, followed by the IPA sequence
 
 This formatted input prompts the model to generate a corresponding sequence of audio tokens in the form `<audio_X><audio_X>...</s>`. The inclusion of speaker tokens in v0.3.0 provides additional context for audio synthesis, while the standardized input-output pattern enables consistent audio generation across various inputs and model versions.
+
+v0.4.0: `<s><speaker><speaker_X><speaker_X>...<emotion><emotion_X><emotion_X>...<text><ipa_X><ipa_X>...<generate>` format, which includes emotion tokens on top of the previous version.
 
 ### Hierarchical Token Structure
 
