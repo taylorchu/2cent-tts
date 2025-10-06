@@ -1,6 +1,6 @@
 # 2cent-tts
 
-This experiment aims to develop an open-weight, cost-effective speech model using ~10k hours of synthetic training data. After training, the model is converted to [gguf](https://github.com/ggml-org/llama.cpp) for inference purposes.
+This experiment aims to develop an open-weight, cost-effective speech model using ~20k hours of synthetic training data. After training, the model is converted to [gguf](https://github.com/ggml-org/llama.cpp) for inference purposes.
 
 Currently, the system only supports US English, though support for additional languages is planned for future releases.
 
