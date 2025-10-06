@@ -12,6 +12,7 @@ Currently, the system only supports US English, though support for additional la
 - Emotion support
 - Multi-turn dialogue in single inference
 - High-quality 24kHz audio output
+- Sound like <sigh>, <breath>, <laugh>, etc.
 
 ## Samples
 
@@ -67,6 +68,8 @@ v0.3.0: `<s><speaker><speaker_X><speaker_X>...<text><ipa_X><ipa_X>...<generate>`
 This formatted input prompts the model to generate a corresponding sequence of audio tokens in the form `<audio_X><audio_X>...</s>`. The inclusion of speaker tokens in v0.3.0 provides additional context for audio synthesis, while the standardized input-output pattern enables consistent audio generation across various inputs and model versions.
 
 v0.4.0: `<s><speaker><speaker_X><speaker_X>...<emotion><emotion_X><emotion_X>...<text><ipa_X><ipa_X>...<generate>` format, which includes emotion tokens on top of the previous version.
+
+v0.5.0: Use the same format as v0.4.0.
 
 ### Hierarchical Token Structure
 

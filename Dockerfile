@@ -8,7 +8,7 @@ FROM alpine AS tts-http-server
 ADD https://github.com/taylorchu/2cent-tts/releases/download/v0.4.0/tts-http-server-linux-amd64.zip /
 RUN unzip /tts-http-server-linux-amd64.zip
 
-FROM ghcr.io/ggml-org/llama.cpp:server-b6617
+FROM ghcr.io/ggml-org/llama.cpp:server-b6691
 
 RUN \
   apt-get update \
@@ -28,5 +28,6 @@ RUN chmod +x tts-http-server
 
 ENV PATH="$PATH:/app"
 ENV LLAMA_SERVER_ARGS="--mirostat 2 --mirostat_lr 0.05"
+ENV IPA_EXCLUDE_TAGS="<breath>,<clearing throat>,<gasp>,<growl>,<grunt>,<heavy breathing>,<hiss>,<hum>,<kiss>,<laugh>,<moan>,<mouth sound>,<purr>,<scoff>,<shushing>,<sigh>,<sniff>,<sob>,<tongue click>,<whisper>,<yawn>,<unknown_sound>"
 
 ENTRYPOINT ["tts-http-server"]
