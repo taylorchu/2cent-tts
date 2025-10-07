@@ -28,6 +28,6 @@ RUN chmod +x tts-http-server
 
 ENV PATH="$PATH:/app"
 ENV LLAMA_SERVER_ARGS="--mirostat 2 --mirostat_lr 0.05"
-ENV IPA_EXCLUDE_TAGS="<breath>,<clearing throat>,<gasp>,<growl>,<grunt>,<heavy breathing>,<hiss>,<hum>,<kiss>,<laugh>,<moan>,<mouth sound>,<purr>,<scoff>,<shushing>,<sigh>,<sniff>,<sob>,<tongue click>,<whisper>,<yawn>,<unknown_sound>"
+ENV IPA_EXCLUDE_TAGS="<breath>,<clearing_throat>,<gasp>,<growl>,<grunt>,<heavy_breathing>,<hiss>,<hum>,<kiss>,<laugh>,<moan>,<mouth_sound>,<purr>,<scoff>,<shushing>,<sigh>,<sniff>,<sob>,<tongue_click>,<whisper>,<yawn>,<unknown_sound>"
 
 ENTRYPOINT ["tts-http-server"]
