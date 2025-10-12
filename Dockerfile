@@ -27,7 +27,7 @@ COPY --from=tts-http-server /tts-http-server-linux-amd64 tts-http-server
 RUN chmod +x tts-http-server
 
 ENV PATH="$PATH:/app"
-ENV LLAMA_SERVER_ARGS="--mirostat 2 --mirostat_lr 0.05"
+ENV LLAMA_SERVER_ARGS="--mirostat 2 --mirostat_lr 0.2 --mirostat_ent 6.0"
 ENV IPA_EXCLUDE_TAGS="<breath>,<clearing_throat>,<gasp>,<growl>,<grunt>,<heavy_breathing>,<hiss>,<hum>,<kiss>,<laugh>,<moan>,<mouth_sound>,<purr>,<scoff>,<shushing>,<sigh>,<sniff>,<sob>,<tongue_click>,<whisper>,<yawn>,<unknown_sound>"
 
 ENTRYPOINT ["tts-http-server"]
