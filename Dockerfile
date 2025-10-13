@@ -27,6 +27,6 @@ COPY --from=tts-http-server /tts-http-server-linux-amd64 tts-http-server
 RUN chmod +x tts-http-server
 
 ENV PATH="$PATH:/app"
-ENV LLAMA_SERVER_ARGS="--mirostat 2 --mirostat_lr 0.2 --mirostat_ent 6.0"
+ENV LLAMA_SERVER_ARGS="--samplers temp"
 
 ENTRYPOINT ["tts-http-server"]
