@@ -34,13 +34,13 @@ docker run -p 8080:80 2cent
 # - Specifies tts-1 model with text input
 # - Requests PCM audio format
 # - Pipes the output to ffplay for immediate playback
-curl http://localhost:8080/v1/audio/speech -H "Content-Type: application/json" -d '{"model":"tts-1","input":"Hello, this is a test of text to speech.","voice":"<speaker><speaker_35><speaker_80><speaker_108><speaker_119><speaker_18><speaker_44><emotion><emotion_99><emotion_114><emotion_22><emotion_25><emotion_126><emotion_1>","response_format":"pcm"}' --output - | ffplay -f s16le -ar 24000 -ac 1 -
+curl http://localhost:8080/v1/audio/speech -H "Content-Type: application/json" -d '{"model":"tts-1","input":"Hello, this is a test of text to speech.","voice":"<speaker><speaker_5><speaker_10><speaker_96><speaker_82><speaker_141><speaker_148><speaker_203><speaker_253><emotion><emotion_46><emotion_17><emotion_123><emotion_90><emotion_180><emotion_137><emotion_213><emotion_196>","response_format":"pcm"}' --output - | ffplay -f s16le -ar 24000 -ac 1 -
 
 Or WAV audio format
-curl http://localhost:8080/v1/audio/speech -H "Content-Type: application/json" -d '{"model":"tts-1","input":"Hello, this is a test of text to speech.","voice":"<speaker><speaker_35><speaker_80><speaker_108><speaker_119><speaker_18><speaker_44><emotion><emotion_99><emotion_114><emotion_22><emotion_25><emotion_126><emotion_1>","response_format":"wav"}' --output - | ffplay -
+curl http://localhost:8080/v1/audio/speech -H "Content-Type: application/json" -d '{"model":"tts-1","input":"Hello, this is a test of text to speech.","voice":"<speaker><speaker_5><speaker_10><speaker_96><speaker_82><speaker_141><speaker_148><speaker_203><speaker_253><emotion><emotion_46><emotion_17><emotion_123><emotion_90><emotion_180><emotion_137><emotion_213><emotion_196>","response_format":"wav"}' --output - | ffplay -
 
 # Or Saves the result as "output.wav" in the current directory
-curl http://localhost:8080/v1/audio/speech -H "Content-Type: application/json" -d '{"model":"tts-1","input":"Hello, this is a test of text to speech.","voice":"<speaker><speaker_35><speaker_80><speaker_108><speaker_119><speaker_18><speaker_44><emotion><emotion_99><emotion_114><emotion_22><emotion_25><emotion_126><emotion_1>","response_format":"wav"}' --output output.wav
+curl http://localhost:8080/v1/audio/speech -H "Content-Type: application/json" -d '{"model":"tts-1","input":"Hello, this is a test of text to speech.","voice":"<speaker><speaker_5><speaker_10><speaker_96><speaker_82><speaker_141><speaker_148><speaker_203><speaker_253><emotion><emotion_46><emotion_17><emotion_123><emotion_90><emotion_180><emotion_137><emotion_213><emotion_196>","response_format":"wav"}' --output output.wav
 ```
 
 ## Technical Implementation Details
