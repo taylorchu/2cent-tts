@@ -12,7 +12,7 @@ Currently, the system only supports US English, though support for additional la
 - Emotion support
 - Multi-turn dialogue in single inference
 - High-quality 24kHz audio output
-- Sound like <sigh>, <breath>, <laugh>, etc.
+- Sound like `<sigh>`, `<breath>`, `<laugh>`, etc.
 
 ## Samples
 
