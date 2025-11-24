@@ -81,7 +81,7 @@ cat <<EOF | curl -X POST http://localhost:8080/v1/audio/voice-cloning \
   "model": "tts-1",
   "input": "Hello, this is a test of text to speech.",
   "audio_text": "the horrid battle fray is done no longer beats the furious drum to death to death or victory all all is still",
-  "audio": "$(base64 -i samples/voice-ref/1.wav | tr -d '\n')",
+  "audio": "$(base64 -i samples/voice-ref/1.wav)",
   "response_format": "wav"
 }
 EOF
