@@ -15,7 +15,7 @@ ADD https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz
 RUN tar -xf /ffmpeg-release-amd64-static.tar.xz && \
   mv /ffmpeg-*-amd64-static /ffmpeg-static
 
-FROM ghcr.io/ggml-org/llama.cpp:server-b7131
+FROM ghcr.io/ggml-org/llama.cpp:server-b7312
 
 RUN \
   apt-get update \

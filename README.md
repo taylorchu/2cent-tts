@@ -80,7 +80,6 @@ cat <<EOF | curl -X POST http://localhost:8080/v1/audio/voice-cloning \
 {
   "model": "tts-1",
   "input": "Hello, this is a test of text to speech.",
-  "audio_text": "the horrid battle fray is done no longer beats the furious drum to death to death or victory all all is still",
   "audio": "$(base64 -i samples/voice-ref/1.wav)",
   "response_format": "wav"
 }
@@ -115,7 +114,7 @@ v0.4.0: `<s><speaker><speaker_X><speaker_X>...<emotion><emotion_X><emotion_X>...
 
 v0.5.0: Use the same format as v0.4.0.
 
-v0.6.0: Use the same format as v0.4.0.
+v0.6.0: Use the same format as v0.4.0. Additionally, `<s><audio_reference>...<text><ipa_X><ipa_X>...<generate>` format, which includes sampled audio for voice cloning.
 
 ### Hierarchical Token Structure
 
