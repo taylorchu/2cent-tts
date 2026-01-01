@@ -34,12 +34,11 @@ ADD https://github.com/taylorchu/2cent-tts/releases/download/v0.6.0/tokenizer.js
 # COPY build/tokenizer.json tokenizer.json
 COPY --from=tts-http-server /tts-http-server-linux-amd64 tts-http-server
 COPY --from=ffmpeg /ffmpeg-static/ffmpeg /usr/local/bin/ffmpeg
-COPY non_empty_audio.gbnf non_empty_audio.gbnf
 
 RUN chmod +x tts-http-server
 
 ENV PATH="$PATH:/app"
-ENV LLAMA_SERVER_ARGS="--samplers temp --grammar-file non_empty_audio.gbnf"
+ENV LLAMA_SERVER_ARGS="--samplers temp"
 ENV IPA_EXCLUDE_TAGS="<breath>,<clearing_throat>,<gasp>,<growl>,<grunt>,<heavy_breathing>,<hiss>,<hum>,<kiss>,<laugh>,<moan>,<mouth_sound>,<purr>,<scoff>,<shushing>,<sigh>,<sniff>,<sob>,<tongue_click>,<whisper>,<yawn>,<unknown_sound>"
 
 ENTRYPOINT ["tts-http-server"]
