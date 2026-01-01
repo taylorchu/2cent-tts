@@ -115,7 +115,7 @@ v0.4.0: `<s><speaker><speaker_X><speaker_X>...<emotion><emotion_X><emotion_X>...
 
 v0.5.0: Use the same format as v0.4.0.
 
-v0.6.0: Use the same format as v0.4.0. Additionally, `<s><audio_reference>...<text><ipa_X><ipa_X>...<generate>` format, which includes sampled audio for voice cloning.
+v0.6.0: Use the same format as v0.4.0. Additionally, `<s><text><ipa_X><ipa_X>...<generate><audio>...` format, which includes sampled audio for voice cloning.
 
 ### Hierarchical Token Structure
 
