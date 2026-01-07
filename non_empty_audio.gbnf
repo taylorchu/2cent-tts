@@ -1,1 +1,1 @@
-root ::= !<audio>+
+root ::= !<audio>{7,}
