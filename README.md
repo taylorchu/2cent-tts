@@ -34,13 +34,57 @@ docker run -p 8080:80 2cent
 # - Specifies tts-1 model with text input
 # - Requests PCM audio format
 # - Pipes the output to ffplay for immediate playback
-curl http://localhost:8080/v1/audio/speech -H "Content-Type: application/json" -d '{"model":"tts-1","input":"Hello, this is a test of text to speech.","voice":"<speaker><speaker_5><speaker_10><speaker_96><speaker_82><speaker_141><speaker_148><speaker_203><speaker_253><emotion><emotion_46><emotion_17><emotion_123><emotion_90><emotion_180><emotion_137><emotion_213><emotion_196>","response_format":"pcm"}' --output - | ffplay -f s16le -ar 24000 -ac 1 -
+cat <<EOF | curl -X POST http://localhost:8080/v1/audio/speech \
+  -H "Content-Type: application/json" \
+  -d @- \
+  --output - | ffplay -f s16le -ar 24000 -i -
+{
+  "model": "tts-1",
+  "input": "Hello, this is a test of text to speech.",
+  "voice": "<speaker><speaker_24><speaker_50><speaker_113><speaker_79><speaker_174><speaker_136><speaker_238><speaker_193><emotion><emotion_58><emotion_20><emotion_111><emotion_120><emotion_129><emotion_179><emotion_238><emotion_253>",
+  "response_format": "pcm"
+}
+EOF
 
-Or WAV audio format
-curl http://localhost:8080/v1/audio/speech -H "Content-Type: application/json" -d '{"model":"tts-1","input":"Hello, this is a test of text to speech.","voice":"<speaker><speaker_5><speaker_10><speaker_96><speaker_82><speaker_141><speaker_148><speaker_203><speaker_253><emotion><emotion_46><emotion_17><emotion_123><emotion_90><emotion_180><emotion_137><emotion_213><emotion_196>","response_format":"wav"}' --output - | ffplay -
+# Or WAV audio format
+cat <<EOF | curl -X POST http://localhost:8080/v1/audio/speech \
+  -H "Content-Type: application/json" \
+  -d @- \
+  --output - | ffplay -
+{
+  "model": "tts-1",
+  "input": "Hello, this is a test of text to speech.",
+  "voice": "<speaker><speaker_24><speaker_50><speaker_113><speaker_79><speaker_174><speaker_136><speaker_238><speaker_193><emotion><emotion_58><emotion_20><emotion_111><emotion_120><emotion_129><emotion_179><emotion_238><emotion_253>",
+  "response_format": "wav"
+}
+EOF
 
-# Or Saves the result as "output.wav" in the current directory
-curl http://localhost:8080/v1/audio/speech -H "Content-Type: application/json" -d '{"model":"tts-1","input":"Hello, this is a test of text to speech.","voice":"<speaker><speaker_5><speaker_10><speaker_96><speaker_82><speaker_141><speaker_148><speaker_203><speaker_253><emotion><emotion_46><emotion_17><emotion_123><emotion_90><emotion_180><emotion_137><emotion_213><emotion_196>","response_format":"wav"}' --output output.wav
+# Or save the result as "output.wav" in the current directory
+cat <<EOF | curl -X POST http://localhost:8080/v1/audio/speech \
+  -H "Content-Type: application/json" \
+  -d @- \
+  --output output.wav
+{
+  "model": "tts-1",
+  "input": "Hello, this is a test of text to speech.",
+  "voice": "<speaker><speaker_24><speaker_50><speaker_113><speaker_79><speaker_174><speaker_136><speaker_238><speaker_193><emotion><emotion_58><emotion_20><emotion_111><emotion_120><emotion_129><emotion_179><emotion_238><emotion_253>",
+  "response_format": "wav"
+}
+EOF
+
+# Or Voice clone
+cat <<EOF | curl -X POST http://localhost:8080/v1/audio/voice-cloning \
+  -H "Content-Type: application/json" \
+  -d @- \
+  --output cloned_output.wav
+{
+  "model": "tts-1",
+  "input": "Hello, this is a test of text to speech.",
+  "audio_text": "the horrid battle fray is done no longer beats the furious drum to death to death or victory all all is still",
+  "audio": "$(base64 -i samples/voice-ref/1.wav)",
+  "response_format": "wav"
+}
+EOF
 ```
 
 ## Technical Implementation Details
@@ -70,6 +114,8 @@ This formatted input prompts the model to generate a corresponding sequence of a
 v0.4.0: `<s><speaker><speaker_X><speaker_X>...<emotion><emotion_X><emotion_X>...<text><ipa_X><ipa_X>...<generate>` format, which includes emotion tokens on top of the previous version.
 
 v0.5.0: Use the same format as v0.4.0.
+
+v0.6.0: Use the same format as v0.4.0. Additionally, `<s><text><ipa_X><ipa_X>...<generate><audio>...` format, which includes sampled audio for voice cloning.
 
 ### Hierarchical Token Structure
 
