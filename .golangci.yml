@@ -1,0 +1,194 @@
+# Defect and idiom linters; structure is left to review, except a limit on branching.
+version: "2"
+
+linters:
+  default: standard
+  enable:
+    - asciicheck
+    - bidichk
+    - bodyclose
+    - containedctx
+    - contextcheck
+    - copyloopvar
+    - depguard
+    - dupl
+    - dupword
+    - errchkjson
+    - errname
+    - errorlint
+    - gocritic
+    - gocyclo
+    - godot
+    - iface
+    - inamedparam
+    - intrange
+    - lll
+    - misspell
+    - modernize
+    - nakedret
+    - nilerr
+    - nilnil
+    - nolintlint
+    - perfsprint
+    - predeclared
+    - recvcheck
+    - revive
+    - thelper
+    - unconvert
+    - unparam
+    - usestdlibvars
+    - usetesting
+    - wastedassign
+    - whitespace
+  settings:
+    # Each package imports only the packages below it, so the engine stays the one package that knows them all.
+    # Tests may also import fixtures and approx, and only tests may.
+    depguard:
+      rules:
+        text:
+          list-mode: strict
+          files: ["**/internal/text/*.go"]
+          allow:
+            - $gostd
+            - github.com/taylorchu/2cent-tts/internal/fixtures
+        tokenizer:
+          list-mode: strict
+          files: ["**/internal/tokenizer/*.go"]
+          allow:
+            - $gostd
+            - github.com/taylorchu/2cent-tts/internal/text
+            - github.com/taylorchu/2cent-tts/internal/fixtures
+        approx:
+          list-mode: strict
+          files: ["**/internal/approx/*.go"]
+          allow:
+            - $gostd
+        tensor:
+          list-mode: strict
+          files: ["**/internal/tensor/*.go"]
+          allow:
+            - $gostd
+            - github.com/taylorchu/2cent-tts/internal/approx
+        audio:
+          list-mode: strict
+          files: ["**/internal/audio/*.go"]
+          allow:
+            - $gostd
+            - github.com/taylorchu/2cent-tts/internal/approx
+            - github.com/taylorchu/2cent-tts/internal/tensor
+            - github.com/taylorchu/2cent-tts/internal/fixtures
+        model:
+          list-mode: strict
+          files: ["**/internal/model/*.go"]
+          allow:
+            - $gostd
+            - github.com/taylorchu/2cent-tts/internal/approx
+            - github.com/taylorchu/2cent-tts/internal/tensor
+            - github.com/taylorchu/2cent-tts/internal/audio
+            - github.com/taylorchu/2cent-tts/internal/fixtures
+        engine:
+          list-mode: strict
+          files: ["**/internal/engine/*.go"]
+          allow:
+            - $gostd
+            # The package's example is written as a caller writes it, in a test package of its own.
+            - github.com/taylorchu/2cent-tts/internal/engine
+            - github.com/taylorchu/2cent-tts/internal/approx
+            - github.com/taylorchu/2cent-tts/internal/text
+            - github.com/taylorchu/2cent-tts/internal/tokenizer
+            - github.com/taylorchu/2cent-tts/internal/tensor
+            - github.com/taylorchu/2cent-tts/internal/audio
+            - github.com/taylorchu/2cent-tts/internal/model
+            - github.com/taylorchu/2cent-tts/internal/fixtures
+        main:
+          list-mode: strict
+          files: ["**/cmd/2cent/*.go"]
+          allow:
+            - $gostd
+            - github.com/taylorchu/2cent-tts/internal/engine
+            - github.com/taylorchu/2cent-tts/internal/audio
+            - github.com/taylorchu/2cent-tts/internal/fixtures
+        fixtures:
+          list-mode: strict
+          files: ["**/internal/fixtures/*.go"]
+          allow:
+            - $gostd
+            - github.com/taylorchu/2cent-tts/internal/tensor
+        fixtures-in-tests-only:
+          files: ["$all", "!$test"]
+          deny:
+            - pkg: github.com/taylorchu/2cent-tts/internal/fixtures
+              desc: only tests load fixtures
+            - pkg: github.com/taylorchu/2cent-tts/internal/approx
+              desc: only tests compare within a tolerance
+    govet:
+      enable-all: true
+      disable:
+        - fieldalignment
+        - shadow
+    staticcheck:
+      checks: ["all", "-ST1000", "-ST1003", "-ST1005", "-ST1020", "-ST1021", "-QF1008"]
+    gocyclo:
+      min-complexity: 15
+    nakedret:
+      max-func-lines: 0
+    nolintlint:
+      require-explanation: true
+      require-specific: true
+    gocritic:
+      enabled-tags:
+        - diagnostic
+        - style
+        - performance
+      disabled-checks:
+        - commentedOutCode
+        - hugeParam
+        - paramTypeCombine
+        - rangeValCopy
+        - unnamedResult
+        - whyNoLint
+    # Below the default of 150 tokens, so a copied block of a dozen lines fails lint.
+    dupl:
+      threshold: 60
+    lll:
+      line-length: 120
+      tab-width: 4
+    revive:
+      rules:
+        - name: confusing-naming
+        - name: context-as-argument
+        - name: error-naming
+        - name: error-return
+        - name: exported
+        - name: import-shadowing
+        - name: package-comments
+        - name: unexported-return
+        - name: var-naming
+        - name: redundant-test-main-exit
+        - name: early-return
+        - name: errorf
+        - name: error-strings
+        - name: if-return
+        - name: increment-decrement
+        - name: indent-error-flow
+        - name: range
+        - name: receiver-naming
+        - name: redefines-builtin-id
+        - name: superfluous-else
+        - name: unnecessary-stmt
+        - name: unused-parameter
+        - name: unused-receiver
+        - name: use-any
+        - name: var-declaration
+
+  exclusions:
+    rules:
+      # The normalizer spells digits and symbols out, so its examples and its output repeat words on purpose.
+      - path: internal/text/normalize
+        linters:
+          - dupword
+
+formatters:
+  enable:
+    - gofmt
+    - goimports

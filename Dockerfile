@@ -1,45 +1,27 @@
-FROM alpine AS onnxruntime
+# syntax=docker/dockerfile:1
+FROM golang:1.27-alpine AS build
 
-ADD https://github.com/microsoft/onnxruntime/releases/download/v1.23.2/onnxruntime-linux-x64-1.23.2.tgz /
-RUN tar -xvf /onnxruntime-linux-x64-1.23.2.tgz
+WORKDIR /src
+COPY go.mod .
+COPY cmd cmd
+COPY internal internal
+RUN CGO_ENABLED=0 GOEXPERIMENT=simd go build -o /2cent ./cmd/2cent
 
-FROM alpine AS tts-http-server
+FROM alpine:3.22
 
-ADD https://github.com/taylorchu/2cent-tts/releases/download/v0.6.0/tts-http-server-linux-amd64.zip /
-# COPY build/tts-http-server-linux-amd64.zip /
-RUN unzip /tts-http-server-linux-amd64.zip
+WORKDIR /app
 
-FROM alpine AS ffmpeg
+# A downloaded file is owned by root with mode 600, which the nobody user cannot read, and a folder ADD makes gets the
+# file's mode, which no one can enter, so the folders come first.
+RUN mkdir -p build/voices
+ADD --chmod=644 --checksum=sha256:4a6633ae9abb0f6319a205c65cd5b555d3cedf0c2f2b242c9254196a9dfef225 \
+    https://github.com/taylorchu/2cent-tts/releases/download/v0.7.0/2cent.safetensors build/2cent.safetensors
+ADD --chmod=644 --checksum=sha256:7f0793b22136cc0cf1acde844012e03ba5aeddee17e24da534cdf4deabc8191c \
+    https://github.com/taylorchu/2cent-tts/releases/download/v0.7.0/default.wav build/voices/default.wav
+ADD --chmod=644 --checksum=sha256:e2f95c3395e91706a6212efe51fa9c7e1da7d8766be2db345ee2b4c983243534 \
+    https://github.com/taylorchu/2cent-tts/releases/download/v0.7.0/default.txt build/voices/default.txt
+COPY --from=build /2cent 2cent
 
-ADD https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz /
-RUN tar -xf /ffmpeg-release-amd64-static.tar.xz && \
-  mv /ffmpeg-*-amd64-static /ffmpeg-static
-
-FROM ghcr.io/ggml-org/llama.cpp:server-b7968
-
-RUN \
-  apt-get update \
-  && apt-get install -y --no-install-recommends --no-install-suggests \
-  espeak-ng \
-  && rm -rf /var/lib/apt/lists/*
-
-COPY --from=onnxruntime /onnxruntime-linux-x64-1.23.2/lib/libonnxruntime.so libonnxruntime.so
-ENV ONNX_PATH=/app/libonnxruntime.so
-
-ADD https://huggingface.co/onnx-community/snac_24khz-ONNX/resolve/main/onnx/decoder_model.onnx snac.onnx
-ADD https://huggingface.co/onnx-community/snac_24khz-ONNX/resolve/main/onnx/encoder_model.onnx snac_encoder.onnx
-ADD https://github.com/taylorchu/2cent-tts/releases/download/v0.6.0/2cent.gguf 2cent.gguf
-ADD https://github.com/taylorchu/2cent-tts/releases/download/v0.6.0/tokenizer.json tokenizer.json
-# COPY build/2cent.gguf 2cent.gguf
-# COPY build/tokenizer.json tokenizer.json
-COPY --from=tts-http-server /tts-http-server-linux-amd64 tts-http-server
-COPY --from=ffmpeg /ffmpeg-static/ffmpeg /usr/local/bin/ffmpeg
-COPY non_empty_audio.gbnf non_empty_audio.gbnf
-
-RUN chmod +x tts-http-server
-
-ENV PATH="$PATH:/app"
-ENV LLAMA_SERVER_ARGS="--samplers temp --grammar-file non_empty_audio.gbnf"
-ENV IPA_EXCLUDE_TAGS="<breath>,<clearing_throat>,<gasp>,<growl>,<grunt>,<heavy_breathing>,<hiss>,<hum>,<kiss>,<laugh>,<moan>,<mouth_sound>,<purr>,<scoff>,<shushing>,<sigh>,<sniff>,<sob>,<tongue_click>,<whisper>,<yawn>,<unknown_sound>"
-
-ENTRYPOINT ["tts-http-server"]
+USER nobody
+EXPOSE 8080
+ENTRYPOINT ["/app/2cent", "-listen", ":8080"]
