@@ -46,13 +46,11 @@ or lines. Parakeet transcribes the speech to count wrong words.
 | MOSS-TTS Nano | 165M | yes | no | 4.2% | 4.4% | 8.2% | 6.3% | - | 4.10 |
 | Audio8 TTS 0.1B | 507M | yes | no | 1.0% | 1.2% | 5.4% | 0.3% | - | 4.46 |
 | Chatterbox Turbo | 746M | yes | yes | 1.4% | 2.2% | 6.9% | 0.6% | 41% | 4.36 |
-| OmniVoice | 814M | yes | yes | | | | | | |
-| VibeVoice Realtime 0.5B | 1,018M | no | no | | | | | | |
+| OmniVoice | 814M | yes | yes | 1.2% | 1.2% | 4.8% | 2.5% | 19% | 4.31 |
+| VibeVoice Realtime 0.5B | 1,018M | no | no | 1.7% | 1.7% | 7.1% | 0.5% | - | 4.41 |
 | Qwen3-TTS 0.6B | 1,085M | yes | no | 1.3% | 1.2% | 6.5% | 4.1% | - | 4.44 |
-| CosyVoice3 0.5B | 1,244M | yes | yes | | | | | | |
-| Maya1 | 3,321M | no | yes | | | | | | |
-
-Results for OmniVoice, VibeVoice, CosyVoice3 and Maya1 are still being measured.
+| CosyVoice3 0.5B | 1,244M | yes | yes | 1.5% | 2.1% | 6.7% | 2.2% | 6% | 4.32 |
+| Maya1 | 3,321M | no | yes | 1.1% | 1.0% | 5.3% | 0.6% | 37% | 4.43 |
 
 - Size: parameters of every network needed to speak, the codec or vocoder and the reference clip's encoders included.
 - Cloning and sound tags: whether the model takes a reference clip, and inline tags such as `<laugh>`.
